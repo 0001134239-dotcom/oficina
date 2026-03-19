@@ -1,6 +1,6 @@
 import streamlit as st
 import pandas as pd
-import psycopg2_binary
+import psycopg2
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 

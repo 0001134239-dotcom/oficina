@@ -1,5 +1,5 @@
 streamlit
 pandas
-psycopg2
+psycopg2-binary
 os
 werkzeug.security

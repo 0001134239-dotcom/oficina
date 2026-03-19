@@ -3,7 +3,6 @@ import pandas as pd
 import psycopg2
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
-import traceback
 
 
 st.set_page_config(
@@ -21,12 +20,6 @@ def get_conn():
         password=st.secrets["DB_PASSWORD"],
         sslmode="require"
     )
-try:
-    conn = get_conn()
-    st.write("Conectou com sucesso!")
-    conn.close()
-except Exception:
-    st.text(traceback.format_exc())
 def criar_tabelas():
     conn = get_conn()
     cursor = conn.cursor()

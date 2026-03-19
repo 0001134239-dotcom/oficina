@@ -15,7 +15,7 @@ st.set_page_config(
 def get_conn():
     return psycopg2.connect(
         host=st.secrets['db']['host'],
-        port = 6543,
+        port=6543,
         port=st.secrets['db']['name'],
         database=st.secrets['db']['name'],
         user=st.secrets['db']['user'],

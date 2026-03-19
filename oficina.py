@@ -14,11 +14,12 @@ st.set_page_config(
 # conexao df
 def get_conn():
     return psycopg2.connect(
-        host=st.secrets["DB_HOST"],
-        port=st.secrets["DB_PORT"],
-        database=st.secrets["DB_NAME"],
-        user=st.secrets["DB_USER"],
-        password=st.secrets["DB_PASSWORD"],
+        host=st.secrets['db']['host'],
+        port = 6543,
+        port=st.secrets['db']['name'],
+        database=st.secrets['db']['name'],
+        user=st.secrets['db']['user'],
+        password=st.secrets['db']['password'],
         sslmode="require"
     )
 try:

@@ -53,6 +53,7 @@ def criar_admin_padrao():
     if cursor.fetchone()[0] == 0:
         hash_admin = generate_password_hash('1234')
         hash_super = generate_password_hash('admin')
+        st.write(type(hash_admin), hash_admin)
 
         cursor.execute(
             "INSERT INTO usuarios (usuario, senha, role) VALUES (%s, %s, %s)",

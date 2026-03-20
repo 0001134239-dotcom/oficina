@@ -91,9 +91,6 @@ def salvar_item(item, armario, prateleira, status, responsavel):
     conn.commit()
     conn.close()
 
-    conn.commit()
-    conn.close()
-
 def excluir_item(item):
     conn = get_conn()
     cursor = conn.cursor()

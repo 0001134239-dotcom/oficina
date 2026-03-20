@@ -203,9 +203,9 @@ with tab1:
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
         if status == 'pegando':
-            responsavel = resultado['responsavel'].values[0]
+            responsavel = resultado['responsavel'].values[0] if 'responsavel' in resultado.columns else None
 
-            if responsavel:
+            if responsavel and str(responsavel).strip() != "":
                 st.warning(f"A ferramenta ({busca}) está em uso por: {responsavel}")
             else:
                 st.warning(f"A ferramenta ({busca}) está em uso")

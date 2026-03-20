@@ -224,8 +224,12 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
-            status = st.selectbox('Voce esta pegando ou devolvendo',['devolvendo','pegando'])
-            if status == 'devolvendo':
+            col1,col2 = st.columns(2)
+            with col1:
+                status1 = st.button('Devolvendo')
+            with col2:
+                statu2 = st.button('Pegando')
+            if status1:
                 st.divider()
             else:
                 usuario = st.text_input('Nome de quem esta pegando a ferramenta')

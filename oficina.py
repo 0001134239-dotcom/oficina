@@ -224,15 +224,10 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
-            col1,col2 = st.columns(2)
-            with col1:
-                status1 = st.button('Devolvendo')
-            with col2:
-                statu2 = st.button('Pegando')
-            if status1:
-                st.divider()
-            else:
-                usuario = st.text_input('Nome de quem esta pegando a ferramenta')
+            status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
+            usuario = ""
+            if status == "pegando":
+                usuario = st.text_input('Nome de quem está pegando a ferramenta')
             if st.form_submit_button("Salvar") and nome:
                 salvar_item(nome, armario, prateleira,status)
                 st.success("Item salvo!")

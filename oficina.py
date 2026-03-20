@@ -54,15 +54,14 @@ def criar_admin_padrao():
         hash_admin = generate_password_hash('1234')
         hash_super = generate_password_hash('admin')
 
-        cursor.execute(
-            "INSERT INTO usuarios VALUES (%s, %s, %s)",
-            ("admin", hash_admin, "admin")
-        )
-        cursor.execute(
-            "INSERT INTO usuarios VALUES (%s, %s, %s)",
-            ("superadmin", hash_super, "superadmin")
-        )
-
+ cursor.execute(
+    "INSERT INTO usuarios (usuario, senha, role) VALUES (%s, %s, %s)",
+    ("admin", hash_admin, "admin")
+)
+cursor.execute(
+    "INSERT INTO usuarios (usuario, senha, role) VALUES (%s, %s, %s)",
+    ("superadmin", hash_super, "superadmin")
+)
     conn.commit()
     conn.close()
 

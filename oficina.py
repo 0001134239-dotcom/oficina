@@ -74,18 +74,19 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-def salvar_item(item, armario, prateleira, status):
+def salvar_item(item, armario, prateleira, status, responsavel):
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO ferramentas (item, armario, prateleira, status)
-    VALUES (%s, %s, %s, %s)
+    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel)
+    VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
-        status = EXCLUDED.status
-    """, (item, armario, prateleira, status))
+        status = EXCLUDED.status,
+        responsavel = EXCLUDED.responsavel
+    """, (item, armario, prateleira, status, responsavel))
 
     conn.commit()
     conn.close()
@@ -201,10 +202,14 @@ with tab1:
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
         if status == 'pegando':
-            st.text(' Massa')
-            st.text(f'A ferramenta {busca} está sendo usada')
+            responsavel = resultado['responsavel'].values[0]
+
+            if responsavel:
+                st.warning(f"A ferramenta ({busca}) está em uso por: {responsavel}")
+            else:
+                st.warning(f"A ferramenta ({busca}) está em uso")
         else:
-            st.text(f'A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})')  
+            st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
 
     caminho_mapa = os.path.join("images", "mapa_oficina.png")
     if os.path.exists(caminho_mapa):
@@ -229,7 +234,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             if status == "pegando":
                 usuario = st.text_input('Nome de quem está pegando a ferramenta')
             if st.form_submit_button("Salvar") and nome:
-                salvar_item(nome, armario, prateleira,status)
+                salvar_item(nome, armario, prateleira, status, responsavel)
                 st.success("Item salvo!")
                 st.rerun()
 

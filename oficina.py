@@ -194,6 +194,7 @@ with tab1:
     st.header("Buscar Ferramenta 🔎")
     listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
     busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
+    st.write(df)
    
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
         filtro = df['item'] == busca

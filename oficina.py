@@ -20,6 +20,7 @@ def get_conn():
         password=st.secrets["DB_PASSWORD"],
         sslmode="require"
     )
+
 def criar_tabelas():
     conn = get_conn()
     cursor = conn.cursor()
@@ -44,6 +45,7 @@ def criar_tabelas():
     conn.close()
 
 criar_tabelas()
+
 def criar_admin_padrao():
     conn = get_conn()
     cursor = conn.cursor()
@@ -52,7 +54,6 @@ def criar_admin_padrao():
     if cursor.fetchone()[0] == 0:
         hash_admin = generate_password_hash('1234')
         hash_super = generate_password_hash('admin')
-        
 
         cursor.execute(
             "INSERT INTO usuarios (usuario, senha, role) VALUES (%s, %s, %s)",
@@ -63,7 +64,8 @@ def criar_admin_padrao():
             ("superadmin", hash_super, "superadmin")
         )
         conn.commit()
-        conn.close()
+
+    conn.close()
 
 criar_admin_padrao()
 
@@ -94,7 +96,6 @@ def excluir_item(item):
     cursor = conn.cursor()
 
     cursor.execute("DELETE FROM ferramentas WHERE item = %s", (item,))
-
     conn.commit()
     conn.close()
 
@@ -140,12 +141,13 @@ def criar_usuario(usuario, senha, role):
         )
 
         conn.commit()
-        conn.close()
         return True
 
     except Exception:
-        conn.close()
         return False
+
+    finally:
+        conn.close()
 
 def excluir_usuario(usuario):
     if usuario != "superadmin":
@@ -155,6 +157,7 @@ def excluir_usuario(usuario):
         conn.commit()
         conn.close()
 
+# sessão
 if "logado" not in st.session_state:
     st.session_state.logado = False
 if "role" not in st.session_state:
@@ -181,7 +184,7 @@ else:
         st.session_state.role = None
         st.rerun()
 
-# inter face
+# interface
 tab1, tab2= st.tabs(['Localizador','Gerenciamento'])
 
 df = carregar_ferramentas()
@@ -192,7 +195,7 @@ with tab1:
     st.header("Buscar Ferramenta 🔎")
     listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
     busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
-   
+
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
         filtro = df['item'] == busca
         resultado = df[filtro]
@@ -202,38 +205,37 @@ with tab1:
         st.markdown(f'Item: {item}')
         st.markdown(f'Armario: {armario}')
         st.markdown(f'Prateleira: {prateleira}')
-        
+
     st.divider()
 
 # area administração
 if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab2:
-        st.header("Gerenciamento do Sistema")      
+        st.header("Gerenciamento do Sistema")
+
         st.subheader("Cadastrar/Atualizar Item")
-    
         with st.form("cadastro"):
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
             submit = st.form_submit_button("Salvar")
-    
+
             if submit and nome:
                 salvar_item(nome, armario, prateleira)
                 st.success("Item salvo!")
                 st.rerun()
-    
+
         st.divider()
 
         if st.session_state.role == "superadmin":
             st.header('Painel de Controle')
+
             st.subheader('Cadastrar novo usuário')
-    
             with st.form("novo_user"):
                 n_usuario = st.text_input("Login")
                 n_senha= st.text_input("Senha", type="password")
                 n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
-    
-    
+
                 if st.form_submit_button("Criar"):
                     if n_usuario and n_senha:
                         if criar_usuario(n_usuario, n_senha, n_nivel):
@@ -241,71 +243,44 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                             st.rerun()
                         else:
                             st.error("Usuário já existe.")
-        
-            st.divider()
-            st.subheader("Excluir Item")
+
+        st.divider()
+
+        st.subheader("Excluir Item")
         if not df.empty:
             item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
-           
+
             if st.button("Confirmar Exclusão", type="primary"):
                 excluir_item(item_del)
                 st.success("Item excluído com sucesso!")
                 st.rerun()
         else:
             st.info("Nenhuma ferramenta cadastrada no momento.")
-        
-            st.subheader('Gerenciamento de Usuários')
-        
-            conn = get_conn()
-            usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
-            conn.close()
-        
-            st.dataframe(usuarios_df, use_container_width=True)
-        
-            target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
-            novasenha = st.text_input("Trocar senha (opcional)", type="password")
-        
-            col1, col2 = st.columns(2)
-        
-            with col1:
-                if st.button("Atualizar Senha") and novasenha:
-                    atualizar_senha(target, novasenha)
-                    st.success("Senha alterada!")
-        
-            with col2:
-                if st.button("Excluir Conta", type="primary"):
-                    excluir_usuario(target)
-                    st.rerun()
-                   
-                    st.divider()
-            st.subheader('Gerenciamento de Usuários')
 
-            conn = get_conn()
-            usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
-            conn.close()
+        # ✅ AGORA FUNCIONA SEMPRE
+        st.subheader('Gerenciamento de Usuários')
 
-            st.dataframe(usuarios_df, use_container_width=True)
+        conn = get_conn()
+        usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
+        conn.close()
 
-            target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
-            novasenha = st.text_input("Trocar senha (opcional)", type="password")
+        st.dataframe(usuarios_df, use_container_width=True)
 
-            col1, col2 = st.columns(2)
+        target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
+        novasenha = st.text_input("Trocar senha (opcional)", type="password")
 
-            with col1:
-                if st.button("Atualizar Senha"):
-                    if novasenha:
-                        atualizar_senha(target, novasenha)
-                        st.success("Senha alterada!")
-                        st.rerun()
-                else:
-                    st.warning("Digite uma nova senha")
+        col1, col2 = st.columns(2)
 
-            with col2:
-                if st.button("Excluir Conta", type="primary"):
-                    excluir_usuario(target)
-                    st.success("Usuário excluído!")
-                    st.rerun()
+        with col1:
+            if st.button("Atualizar Senha") and novasenha:
+                atualizar_senha(target, novasenha)
+                st.success("Senha alterada!")
+
+        with col2:
+            if st.button("Excluir Conta", type="primary"):
+                excluir_usuario(target)
+                st.rerun()
+
 else:
     with tab2:
         st.warning('Login nao efetuado')
-

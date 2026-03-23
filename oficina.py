@@ -198,7 +198,7 @@ with tab1:
         item = resultado['item'].values[0]
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
-        st.success(f"A ferramenta st.markdown({item}) está no armário ({armario}) e na prateleira ({prateleira})")
+        st.markdown')
     st.divider()
 
 # area administração
@@ -218,8 +218,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 st.rerun()
     
         st.divider()
-    
-        # 🔽 AGORA FORA DO FORM (CORRETO)
+
         if st.session_state.role == "superadmin":
             st.header('Painel de Controle')
             st.subheader('Cadastrar novo usuário')
@@ -228,6 +227,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 n_usuario = st.text_input("Login")
                 n_senha= st.text_input("Senha", type="password")
                 n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
+                submit = st.form_submit_button("Salvar")
     
                 if st.form_submit_button("Criar"):
                     if n_usuario and n_senha:

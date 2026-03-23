@@ -2,4 +2,4 @@ streamlit==1.51.0
 pandas
 psycopg2-binary
 werkzeug
-
+base64

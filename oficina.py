@@ -196,7 +196,8 @@ with tab1:
         filtro = df['item'] == busca
         resultado = df[filtro]
         armario = resultado['armario'].values[0]
-        st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
+        prateleira = resultado['prateleira'].values[0]
+        st.success(f"A ferramenta ({filtro}) está no armário ({armario}) e na prateleira ({prateleira})")
     st.divider()
 
 # area administração

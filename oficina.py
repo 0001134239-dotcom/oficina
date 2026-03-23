@@ -229,7 +229,7 @@ with tab1:
 # area administração
 if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab2:
-        st.header(":white[Gerenciamento do Sistema]")
+        st.text(":white[Gerenciamento do Sistema]")
 
         st.subheader("Cadastrar/Atualizar Item")
         with st.form("cadastro"):

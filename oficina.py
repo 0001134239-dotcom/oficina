@@ -211,6 +211,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
+            submit = st.form_submit_button("Salvar")
     
             if submit and nome:
                 salvar_item(nome, armario, prateleira)
@@ -227,7 +228,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 n_usuario = st.text_input("Login")
                 n_senha= st.text_input("Senha", type="password")
                 n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
-                submit = st.form_submit_button("Salvar")
+    
     
                 if st.form_submit_button("Criar"):
                     if n_usuario and n_senha:

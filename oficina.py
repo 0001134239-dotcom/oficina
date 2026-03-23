@@ -27,7 +27,7 @@ def fundo(imagem):
         ''',
         unsafe_allow_html=True
     )
-fundo("Fundo.png")
+fundo("fundo.png")
 # conexao df1
 def get_conn():
     return psycopg2.connect(

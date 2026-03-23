@@ -249,22 +249,22 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 caminho = os.path.join("images", nome_arquivo)
                 with open(caminho, "wb") as f:
                     f.write(imagem_file.getbuffer())
-
-    if st.form_submit_button("Salvar") and nome:
-        salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
-        st.success("Item salvo!")
-        st.rerun()
-        st.divider()
-        st.subheader("Excluir Item")
-        if not df.empty:
-            item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
-           
-            if st.button("Confirmar Exclusão", type="primary"):
-                excluir_item(item_del)
-                st.success("Item excluído com sucesso!")
-                st.rerun()
-        else:
-            st.info("Nenhuma ferramenta cadastrada no momento.")
+    
+        if st.form_submit_button("Salvar") and nome:
+            salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+            st.success("Item salvo!")
+            st.rerun()
+            st.divider()
+            st.subheader("Excluir Item")
+            if not df.empty:
+                item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
+               
+                if st.button("Confirmar Exclusão", type="primary"):
+                    excluir_item(item_del)
+                    st.success("Item excluído com sucesso!")
+                    st.rerun()
+            else:
+                st.info("Nenhuma ferramenta cadastrada no momento.")
 
     with tab2:
         if st.session_state.logado and st.session_state.role == "superadmin":

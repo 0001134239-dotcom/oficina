@@ -4,7 +4,6 @@ import psycopg2
 import os
 from werkzeug.security import generate_password_hash, check_password_hash
 
-
 st.set_page_config(
     page_title="Localizador de Ferramentas",
     layout="centered"
@@ -76,7 +75,7 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-# ✅ SEM IMAGEM
+# ✅ REMOVIDO imagem
 def salvar_item(item, armario, prateleira, status, responsavel):
     conn = get_conn()
     cursor = conn.cursor()
@@ -97,19 +96,15 @@ def salvar_item(item, armario, prateleira, status, responsavel):
 def excluir_item(item):
     conn = get_conn()
     cursor = conn.cursor()
-
     cursor.execute("DELETE FROM ferramentas WHERE item = %s", (item,))
-
     conn.commit()
     conn.close()
 
 def autenticar(usuario, senha):
     conn = get_conn()
     cursor = conn.cursor()
-
     cursor.execute("SELECT senha, role FROM usuarios WHERE usuario = %s", (usuario,))
     resultado = cursor.fetchone()
-
     conn.close()
 
     if resultado:
@@ -121,7 +116,6 @@ def autenticar(usuario, senha):
 def atualizar_senha(usuario, nova_senha):
     conn = get_conn()
     cursor = conn.cursor()
-
     hash_nova_senha = generate_password_hash(nova_senha)
 
     cursor.execute(
@@ -138,16 +132,13 @@ def criar_usuario(usuario, senha, role):
 
     try:
         hash_senha = generate_password_hash(senha)
-
         cursor.execute(
             "INSERT INTO usuarios VALUES (%s, %s, %s)",
             (usuario, hash_senha, role)
         )
-
         conn.commit()
         conn.close()
         return True
-
     except Exception:
         conn.close()
         return False
@@ -160,6 +151,7 @@ def excluir_usuario(usuario):
         conn.commit()
         conn.close()
 
+# sessão
 if "logado" not in st.session_state:
     st.session_state.logado = False
 if "role" not in st.session_state:
@@ -191,62 +183,96 @@ tab1, tab2 = st.tabs(['Localizador','Ferramentas'])
 
 df = carregar_ferramentas()
 
-# Area geral
+# LOCALIZADOR
 with tab1:
     st.title("Localizador de Ferramentas da Oficina")
     st.header("Buscar Ferramenta 🔎")
 
-    listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
-    busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
+    lista = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
+    busca = st.selectbox("Selecione a ferramenta", lista)
 
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
-        filtro = df['item'] == busca
-        resultado = df[filtro]
+        resultado = df[df['item'] == busca]
 
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
 
-        # ✅ IMAGEM AUTOMÁTICA PELO ARMÁRIO
+        # ✅ IMAGEM AUTOMÁTICA
         caminho_img = os.path.join("images", f"{armario}.png")
         if os.path.exists(caminho_img):
             st.image(caminho_img, caption=f"Local aproximado: {armario}")
 
         if status == 'pegando':
             responsavel = resultado['responsavel'].values[0]
-
-            if responsavel and str(responsavel).strip() != "":
-                st.warning(f"A ferramenta ({busca}) está em uso por: {responsavel}")
+            if responsavel:
+                st.warning(f"{busca} em uso por: {responsavel}")
             else:
-                st.warning(f"A ferramenta ({busca}) está em uso")
+                st.warning(f"{busca} em uso")
         else:
-            st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
+            st.success(f"{busca} → Armário {armario} | Prateleira {prateleira}")
 
     st.divider()
 
-# area administração
+# ADMIN
 if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab2:
-        st.header("Gerenciamento do Sistema")      
-        st.subheader("Cadastrar/Atualizar Item")
+        st.header("Gerenciamento")
 
         with st.form("cadastro"):
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
-            status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
+            status = st.radio("Status", ["devolvendo", "pegando"])
 
             responsavel = ""
             if status == "pegando":
-                responsavel = st.text_input('Nome de quem está pegando a ferramenta')
+                responsavel = st.text_input("Responsável")
 
-            submit = st.form_submit_button("Salvar")
-
-            if submit and nome:
+            if st.form_submit_button("Salvar") and nome:
                 salvar_item(nome, armario, prateleira, status, responsavel)
-                st.success("Item salvo!")
+                st.success("Salvo!")
+                st.rerun()
+
+        st.divider()
+
+        # usuários
+        if st.session_state.role == "superadmin":
+            st.subheader("Usuários")
+
+            with st.form("novo_user"):
+                u = st.text_input("Login")
+                s = st.text_input("Senha", type="password")
+                r = st.selectbox("Nível", ["admin", "superadmin"])
+
+                if st.form_submit_button("Criar"):
+                    if criar_usuario(u, s, r):
+                        st.success("Criado")
+                        st.rerun()
+                    else:
+                        st.error("Erro")
+
+        conn = get_conn()
+        usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
+        conn.close()
+
+        st.dataframe(usuarios_df)
+
+        alvo = st.selectbox("Usuário", usuarios_df["usuario"])
+        nova = st.text_input("Nova senha", type="password")
+
+        col1, col2 = st.columns(2)
+
+        with col1:
+            if st.button("Atualizar") and nova:
+                atualizar_senha(alvo, nova)
+                st.success("Atualizada")
+
+        with col2:
+            if st.button("Excluir"):
+                excluir_usuario(alvo)
                 st.rerun()
 
 else:
     with tab2:
-        st.warning('Login nao efetuado')
+        st.warning("Login necessário")

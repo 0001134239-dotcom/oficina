@@ -83,7 +83,7 @@ def salvar_item(item, armario, prateleira):
     ON CONFLICT (item) DO UPDATE SET
         item = EXCLUDED.item,
         armario = EXCLUDED.armario,
-        prateleira = EXCLUDED.prateleira,
+        prateleira = EXCLUDED.prateleira
     """, (item, armario, prateleira))
 
     conn.commit()

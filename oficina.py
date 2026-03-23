@@ -10,7 +10,24 @@ st.set_page_config(
     page_title="Localizador de Ferramentas",
     layout="centered"
 )
-
+def fundo(imagem):
+    with open(imagem, 'rb') as img:
+        img_e = base64.b64encode(img.read()).decode()
+    st.markdown(
+        f'''
+        <style>
+        .stApp {{
+            background-image: url('data:image/png;base64,{img_e}');
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            background-attachment: unset;
+        }}
+        </style>
+        ''',
+        unsafe_allow_html=True
+    )
+fundo("Fundo.png")
 # conexao df1
 def get_conn():
     return psycopg2.connect(

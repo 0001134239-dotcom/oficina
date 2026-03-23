@@ -187,7 +187,7 @@ else:
         st.rerun()
 
 # inter face
-tab1, tab2, tab3 = st.tabs(['Localizador','Itens','Mapa'])
+tab1, tab2= st.tabs(['Localizador','Ferramentas'])
 
 df = carregar_ferramentas()
 
@@ -204,6 +204,11 @@ with tab1:
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
+        imagem = resultado['imagem'].values[0] if 'imagem' in resultado.columns else None
+        if imagem:
+            caminho_img = os.path.join("images", imagem)
+            if os.path.exists(caminho_img):
+                st.image(caminho_img, caption=f"Local aproximado de {busca}")
         if status == 'pegando':
             responsavel = resultado['responsavel'].values[0] if 'responsavel' in resultado.columns else None
 
@@ -229,16 +234,27 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         st.header("Gerenciamento do Sistema")      
         st.subheader("Cadastrar/Atualizar Item")
         with st.form("cadastro"):
-            nome = st.text_input("Nome do Item")
-            armario = st.text_input("Armário")
-            prateleira = st.text_input("Prateleira")
-            status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
-            responsavel = ""
-            if status == "pegando":
-                responsavel = st.text_input('Nome de quem está pegando a ferramenta')
-            if st.form_submit_button("Salvar") and nome:
-                salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+    nome = st.text_input("Nome do Item")
+    armario = st.text_input("Armário")
+    prateleira = st.text_input("Prateleira")
+    status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
+    responsavel = ""
+    if status == "pegando":
+        responsavel = st.text_input('Nome de quem está pegando a ferramenta')
+    imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
+    nome_arquivo = ""
+    if imagem_file and nome:
+        os.makedirs("images", exist_ok=True)
+        nome_arquivo = f"{nome}.png"
+        caminho = os.path.join("images", nome_arquivo)
 
+        with open(caminho, "wb") as f:
+            f.write(imagem_file.getbuffer())
+
+    if st.form_submit_button("Salvar") and nome:
+        salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+        st.success("Item salvo!")
+        st.rerun()
         st.divider()
         st.subheader("Excluir Item")
         if not df.empty:
@@ -250,18 +266,6 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 st.rerun()
         else:
             st.info("Nenhuma ferramenta cadastrada no momento.")
-
-    with tab3:        
-        imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
-
-        nome_arquivo = ""
-        if imagem_file:
-            os.makedirs("images", exist_ok=True)
-            nome_arquivo = f"{nome}.png"
-            caminho = os.path.join("images", nome_arquivo)
-
-            with open(caminho, "wb") as f:
-                f.write(imagem_file.getbuffer())
 
     with tab2:
         if st.session_state.logado and st.session_state.role == "superadmin":
@@ -304,6 +308,4 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                     st.rerun()
 else:
     with tab2:
-        st.warning('Login nao efetuado')
-    with tab3:
         st.warning('Login nao efetuado')

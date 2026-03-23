@@ -276,9 +276,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                             if criar_usuario(n_usuario, n_senha, n_nivel):
                                 st.success("Usuário criado!")
                                 st.rerun()
-                    else:
-                        st.error("Usuário já existe.")
-       
+                        else:
+                            st.error("Usuário já existe.")
+           
             st.divider()
        
             st.subheader('Gerenciamento de Usuários')

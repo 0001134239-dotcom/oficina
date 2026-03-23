@@ -5,6 +5,7 @@ import os
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
 
+
 st.set_page_config(
     page_title="Localizador de Ferramentas",
     layout="centered"

@@ -259,8 +259,8 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
                 st.success("Item salvo!")
                 st.rerun()
-                    else:
-                        st.info("Nenhuma ferramenta cadastrada no momento.")
+            else:
+                st.info("Nenhuma ferramenta cadastrada no momento.")
         
             with tab2:
                 if st.session_state.logado and st.session_state.role == "superadmin":

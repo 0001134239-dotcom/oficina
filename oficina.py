@@ -28,10 +28,7 @@ def criar_tabelas():
     CREATE TABLE IF NOT EXISTS ferramentas (
         item TEXT PRIMARY KEY,
         armario TEXT,
-        prateleira TEXT,
-        status TEXT,
-        responsavel TEXT,
-        imagem TEXT
+        prateleira TEXT
     )
     """)
 
@@ -76,19 +73,17 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-def salvar_item(item, armario, prateleira, status, responsavel,):
+def salvar_item(item, armario, prateleira):
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel)
-    VALUES (%s, %s, %s, %s, %s)
+    INSERT INTO ferramentas (item, armario, prateleira)
+    VALUES (%s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
-        status = EXCLUDED.status,
-        responsavel = EXCLUDED.responsavel,
-    """, (item, armario, prateleira, status, responsavel))
+    """, (item, armario, prateleira))
 
     conn.commit()
     conn.close()
@@ -201,17 +196,7 @@ with tab1:
         filtro = df['item'] == busca
         resultado = df[filtro]
         armario = resultado['armario'].values[0]
-        prateleira = resultado['prateleira'].values[0]
-        status = resultado['status'].values[0]
-        if status == 'pegando':
-            responsavel = resultado['responsavel'].values[0] if 'responsavel' in resultado.columns else None
-
-            if responsavel and str(responsavel).strip() != "":
-                st.warning(f"A ferramenta ({busca}) está em uso por: {responsavel}")
-            else:
-                st.warning(f"A ferramenta ({busca}) está em uso")
-        else:
-            st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
+        st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
 
   
    

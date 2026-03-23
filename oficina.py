@@ -20,6 +20,7 @@ def get_conn():
         password=st.secrets["DB_PASSWORD"],
         sslmode="require"
     )
+
 def criar_tabelas():
     conn = get_conn()
     cursor = conn.cursor()
@@ -30,8 +31,7 @@ def criar_tabelas():
         armario TEXT,
         prateleira TEXT,
         status TEXT,
-        responsavel TEXT,
-        imagem TEXT
+        responsavel TEXT
     )
     """)
 
@@ -47,6 +47,7 @@ def criar_tabelas():
     conn.close()
 
 criar_tabelas()
+
 def criar_admin_padrao():
     conn = get_conn()
     cursor = conn.cursor()
@@ -55,7 +56,6 @@ def criar_admin_padrao():
     if cursor.fetchone()[0] == 0:
         hash_admin = generate_password_hash('1234')
         hash_super = generate_password_hash('admin')
-        
 
         cursor.execute(
             "INSERT INTO usuarios (usuario, senha, role) VALUES (%s, %s, %s)",
@@ -76,20 +76,20 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-def salvar_item(item, armario, prateleira, status, responsavel, imagem):
+# ✅ SEM IMAGEM
+def salvar_item(item, armario, prateleira, status, responsavel):
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel, imagem)
-    VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel)
+    VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
         status = EXCLUDED.status,
-        responsavel = EXCLUDED.responsavel,
-        imagem = EXCLUDED.imagem
-    """, (item, armario, prateleira, status, responsavel, imagem))
+        responsavel = EXCLUDED.responsavel
+    """, (item, armario, prateleira, status, responsavel))
 
     conn.commit()
     conn.close()
@@ -186,8 +186,8 @@ else:
         st.session_state.role = None
         st.rerun()
 
-# inter face
-tab1, tab2= st.tabs(['Localizador','Ferramentas'])
+# interface
+tab1, tab2 = st.tabs(['Localizador','Ferramentas'])
 
 df = carregar_ferramentas()
 
@@ -195,22 +195,25 @@ df = carregar_ferramentas()
 with tab1:
     st.title("Localizador de Ferramentas da Oficina")
     st.header("Buscar Ferramenta 🔎")
+
     listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
     busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
-   
+
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
         filtro = df['item'] == busca
         resultado = df[filtro]
+
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
-        imagem = resultado['imagem'].values[0] if 'imagem' in resultado.columns else None
-        if imagem:
-            caminho_img = os.path.join("images", imagem)
-            if os.path.exists(caminho_img):
-                st.image(caminho_img, caption=f"Local aproximado de {busca}")
+
+        # ✅ IMAGEM AUTOMÁTICA PELO ARMÁRIO
+        caminho_img = os.path.join("images", f"{armario}.png")
+        if os.path.exists(caminho_img):
+            st.image(caminho_img, caption=f"Local aproximado: {armario}")
+
         if status == 'pegando':
-            responsavel = resultado['responsavel'].values[0] if 'responsavel' in resultado.columns else None
+            responsavel = resultado['responsavel'].values[0]
 
             if responsavel and str(responsavel).strip() != "":
                 st.warning(f"A ferramenta ({busca}) está em uso por: {responsavel}")
@@ -219,13 +222,6 @@ with tab1:
         else:
             st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
 
-    caminho_mapa = os.path.join("images", "mapa_oficina.png")
-    if os.path.exists(caminho_mapa):
-        botaomapa = st.toggle('Mostrar mapa')
-        if botaomapa:
-            st.subheader("Mapa do Local")
-            st.image(caminho_mapa)        
-   
     st.divider()
 
 # area administração
@@ -233,102 +229,24 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab2:
         st.header("Gerenciamento do Sistema")      
         st.subheader("Cadastrar/Atualizar Item")
-    
+
         with st.form("cadastro"):
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
             status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
-    
+
             responsavel = ""
             if status == "pegando":
                 responsavel = st.text_input('Nome de quem está pegando a ferramenta')
-    
-            imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
-    
-            nome_arquivo = ""
-            if imagem_file and nome:
-                os.makedirs("images", exist_ok=True)
-                nome_arquivo = f"{nome.replace(' ', '_')}.png"
-                caminho = os.path.join("images", nome_arquivo)
-    
-                with open(caminho, "wb") as f:
-                    f.write(imagem_file.getbuffer())
-    
+
             submit = st.form_submit_button("Salvar")
-    
+
             if submit and nome:
-                salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+                salvar_item(nome, armario, prateleira, status, responsavel)
                 st.success("Item salvo!")
                 st.rerun()
-    
-        st.divider()
-    
-        # 🔽 AGORA FORA DO FORM (CORRETO)
-        if st.session_state.role == "superadmin":
-            st.header('Painel de Controle')
-            st.subheader('Cadastrar novo usuário')
-    
-            with st.form("novo_user"):
-                n_usuario = st.text_input("Login")
-                n_senha= st.text_input("Senha", type="password")
-                n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
-    
-                if st.form_submit_button("Criar"):
-                    if n_usuario and n_senha:
-                        if criar_usuario(n_usuario, n_senha, n_nivel):
-                            st.success("Usuário criado!")
-                            st.rerun()
-                        else:
-                            st.error("Usuário já existe.")
 
-    st.divider()
-
-    st.subheader('Gerenciamento de Usuários')
-
-    conn = get_conn()
-    usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
-    conn.close()
-
-    st.dataframe(usuarios_df, use_container_width=True)
-
-    target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
-    novasenha = st.text_input("Trocar senha (opcional)", type="password")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Atualizar Senha") and novasenha:
-            atualizar_senha(target, novasenha)
-            st.success("Senha alterada!")
-
-    with col2:
-        if st.button("Excluir Conta", type="primary"):
-            excluir_usuario(target)
-            st.rerun()
-           
-            st.divider()
-       
-            st.subheader('Gerenciamento de Usuários')
-
-            conn = get_conn()
-            usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
-            conn.close()
-
-            st.dataframe(usuarios_df, use_container_width=True)
-               
-            target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
-            novasenha = st.text_input("Trocar senha (opcional)", type="password")
-               
-            att, exclui = st.columns(2)
-            with att:
-                if st.button("Atualizar Senha") and novasenha:
-                    atualizar_senha(target, novasenha)
-                    st.success("Senha alterada!")
-            with exclui:
-                if st.button("Excluir Conta", type="primary"):
-                    excluir_usuario(target)
-                    st.rerun()
 else:
     with tab2:
         st.warning('Login nao efetuado')

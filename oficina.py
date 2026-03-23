@@ -198,7 +198,7 @@ with tab1:
         item = resultado['item'].values[0]
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
-        st.markdown')
+        #st.markdown')
     st.divider()
 
 # area administração

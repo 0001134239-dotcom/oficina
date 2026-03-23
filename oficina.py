@@ -2,6 +2,7 @@ import streamlit as st
 import pandas as pd
 import psycopg2
 import os
+import base64
 from werkzeug.security import generate_password_hash, check_password_hash
 
 

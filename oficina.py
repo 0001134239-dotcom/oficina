@@ -76,20 +76,19 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-def salvar_item(item, armario, prateleira, status, responsavel, imagem):
+def salvar_item(item, armario, prateleira, status, responsavel,):
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel, imagem)
-    VALUES (%s, %s, %s, %s, %s, %s)
+    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel)
+    VALUES (%s, %s, %s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
         status = EXCLUDED.status,
         responsavel = EXCLUDED.responsavel,
-        imagem = EXCLUDED.imagem
-    """, (item, armario, prateleira, status, responsavel, imagem))
+    """, (item, armario, prateleira, status, responsavel))
 
     conn.commit()
     conn.close()
@@ -204,11 +203,6 @@ with tab1:
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
         status = resultado['status'].values[0]
-        imagem = resultado['imagem'].values[0] if 'imagem' in resultado.columns else None
-        if imagem:
-            caminho_img = os.path.join("images", imagem)
-            if os.path.exists(caminho_img):
-                st.image(caminho_img, caption=f"Local aproximado de {busca}")
         if status == 'pegando':
             responsavel = resultado['responsavel'].values[0] if 'responsavel' in resultado.columns else None
 
@@ -219,12 +213,7 @@ with tab1:
         else:
             st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
 
-    caminho_mapa = os.path.join("images", "mapa_oficina.png")
-    if os.path.exists(caminho_mapa):
-        botaomapa = st.toggle('Mostrar mapa')
-        if botaomapa:
-            st.subheader("Mapa do Local")
-            st.image(caminho_mapa)        
+  
    
     st.divider()
 
@@ -242,23 +231,11 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     
             responsavel = ""
             if status == "pegando":
-                responsavel = st.text_input('Nome de quem está pegando a ferramenta')
-    
-            imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
-    
-            nome_arquivo = ""
-            if imagem_file and nome:
-                os.makedirs("images", exist_ok=True)
-                nome_arquivo = f"{nome.replace(' ', '_')}.png"
-                caminho = os.path.join("images", nome_arquivo)
-    
-                with open(caminho, "wb") as f:
-                    f.write(imagem_file.getbuffer())
-    
+                responsavel = st.text_input('Nome de quem está pegando a ferramenta')    
             submit = st.form_submit_button("Salvar")
     
             if submit and nome:
-                salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+                salvar_item(nome, armario, prateleira, status, responsavel)
                 st.success("Item salvo!")
                 st.rerun()
     

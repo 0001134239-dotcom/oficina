@@ -300,11 +300,11 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 else:
                     st.warning("Digite uma nova senha")
 
-with col2:
-    if st.button("Excluir Conta", type="primary"):
-        excluir_usuario(target)
-        st.success("Usuário excluído!")
-        st.rerun()
+            with col2:
+                if st.button("Excluir Conta", type="primary"):
+                    excluir_usuario(target)
+                    st.success("Usuário excluído!")
+                    st.rerun()
 else:
     with tab2:
         st.warning('Login nao efetuado')

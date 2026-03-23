@@ -197,9 +197,6 @@ with tab1:
         resultado = df[filtro]
         armario = resultado['armario'].values[0]
         st.success(f"A ferramenta ({busca}) está no armário ({armario}) e na prateleira ({prateleira})")
-
-  
-   
     st.divider()
 
 # area administração
@@ -212,15 +209,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             nome = st.text_input("Nome do Item")
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
-            status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
-    
-            responsavel = ""
-            if status == "pegando":
-                responsavel = st.text_input('Nome de quem está pegando a ferramenta')    
-            submit = st.form_submit_button("Salvar")
     
             if submit and nome:
-                salvar_item(nome, armario, prateleira, status, responsavel)
+                salvar_item(nome, armario, prateleira)
                 st.success("Item salvo!")
                 st.rerun()
     

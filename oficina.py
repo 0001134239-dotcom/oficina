@@ -18,7 +18,7 @@ def fundo(imagem):
         <style>
         .stApp {{
             background-image: url('data:image/png;base64,{img_e}');
-            background-size: container;
+            background-size: contain;
             background-position: center;
             background-repeat: no-repeat;
             background-attachment: unset;

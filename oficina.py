@@ -258,54 +258,54 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                             st.rerun()
                         else:
                             st.error("Usuário já existe.")
-
-    st.divider()
-
-    st.subheader('Gerenciamento de Usuários')
-
-    conn = get_conn()
-    usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
-    conn.close()
-
-    st.dataframe(usuarios_df, use_container_width=True)
-
-    target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
-    novasenha = st.text_input("Trocar senha (opcional)", type="password")
-
-    col1, col2 = st.columns(2)
-
-    with col1:
-        if st.button("Atualizar Senha") and novasenha:
-            atualizar_senha(target, novasenha)
-            st.success("Senha alterada!")
-
-    with col2:
-        if st.button("Excluir Conta", type="primary"):
-            excluir_usuario(target)
-            st.rerun()
-           
+        
             st.divider()
-       
+        
             st.subheader('Gerenciamento de Usuários')
-
+        
             conn = get_conn()
             usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
             conn.close()
-
+        
             st.dataframe(usuarios_df, use_container_width=True)
-               
+        
             target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
             novasenha = st.text_input("Trocar senha (opcional)", type="password")
-               
-            att, exclui = st.columns(2)
-            with att:
+        
+            col1, col2 = st.columns(2)
+        
+            with col1:
                 if st.button("Atualizar Senha") and novasenha:
                     atualizar_senha(target, novasenha)
                     st.success("Senha alterada!")
-            with exclui:
+        
+            with col2:
                 if st.button("Excluir Conta", type="primary"):
                     excluir_usuario(target)
                     st.rerun()
+                   
+                    st.divider()
+               
+                    st.subheader('Gerenciamento de Usuários')
+        
+                    conn = get_conn()
+                    usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)
+                    conn.close()
+        
+                    st.dataframe(usuarios_df, use_container_width=True)
+                       
+                    target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
+                    novasenha = st.text_input("Trocar senha (opcional)", type="password")
+                       
+                    att, exclui = st.columns(2)
+                    with att:
+                        if st.button("Atualizar Senha") and novasenha:
+                            atualizar_senha(target, novasenha)
+                            st.success("Senha alterada!")
+                    with exclui:
+                        if st.button("Excluir Conta", type="primary"):
+                            excluir_usuario(target)
+                            st.rerun()
 else:
     with tab2:
         st.warning('Login nao efetuado')

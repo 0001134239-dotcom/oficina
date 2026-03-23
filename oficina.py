@@ -10,7 +10,7 @@ st.set_page_config(
     layout="centered"
 )
 
-# conexao df
+# conexao df1
 def get_conn():
     return psycopg2.connect(
         host=st.secrets["DB_HOST"],

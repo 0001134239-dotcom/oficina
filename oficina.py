@@ -199,8 +199,8 @@ with tab1:
         item = resultado['item'].values[0]
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
-        st.markdown('Armario:'+'{A}')
-        A = st.markdow({item})
+        st.markdown(f'Armario:'+f'{A}')
+        A = st.markdown({item})
         
     st.divider()
 

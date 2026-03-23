@@ -247,9 +247,8 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 os.makedirs("images", exist_ok=True)
                 nome_arquivo = f"{nome}.png"
                 caminho = os.path.join("images", nome_arquivo)
-
-        with open(caminho, "wb") as f:
-            f.write(imagem_file.getbuffer())
+                with open(caminho, "wb") as f:
+                f.write(imagem_file.getbuffer())
 
     if st.form_submit_button("Salvar") and nome:
         salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)

@@ -234,19 +234,19 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         st.header("Gerenciamento do Sistema")      
         st.subheader("Cadastrar/Atualizar Item")
         with st.form("cadastro"):
-    nome = st.text_input("Nome do Item")
-    armario = st.text_input("Armário")
-    prateleira = st.text_input("Prateleira")
-    status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
-    responsavel = ""
-    if status == "pegando":
-        responsavel = st.text_input('Nome de quem está pegando a ferramenta')
-    imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
-    nome_arquivo = ""
-    if imagem_file and nome:
-        os.makedirs("images", exist_ok=True)
-        nome_arquivo = f"{nome}.png"
-        caminho = os.path.join("images", nome_arquivo)
+            nome = st.text_input("Nome do Item")
+            armario = st.text_input("Armário")
+            prateleira = st.text_input("Prateleira")
+            status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
+            responsavel = ""
+            if status == "pegando":
+                responsavel = st.text_input('Nome de quem está pegando a ferramenta')
+            imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
+            nome_arquivo = ""
+            if imagem_file and nome:
+                os.makedirs("images", exist_ok=True)
+                nome_arquivo = f"{nome}.png"
+                caminho = os.path.join("images", nome_arquivo)
 
         with open(caminho, "wb") as f:
             f.write(imagem_file.getbuffer())

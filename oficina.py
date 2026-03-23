@@ -238,48 +238,44 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             armario = st.text_input("Armário")
             prateleira = st.text_input("Prateleira")
             status = st.radio("Status da ferramenta", ["devolvendo", "pegando"])
+        
             responsavel = ""
             if status == "pegando":
                 responsavel = st.text_input('Nome de quem está pegando a ferramenta')
+        
             imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
+        
             nome_arquivo = ""
             if imagem_file and nome:
                 os.makedirs("images", exist_ok=True)
-                nome_arquivo = f"{nome}.png"
+                nome_arquivo = f"{nome.replace(' ', '_')}.png"
                 caminho = os.path.join("images", nome_arquivo)
+        
                 with open(caminho, "wb") as f:
                     f.write(imagem_file.getbuffer())
-    
-        if st.form_submit_button("Salvar") and nome:
-            salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
-            st.success("Item salvo!")
-            st.rerun()
-            st.divider()
-            st.subheader("Excluir Item")
-            if not df.empty:
-                item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
-               
-                if st.button("Confirmar Exclusão", type="primary"):
-                    excluir_item(item_del)
-                    st.success("Item excluído com sucesso!")
-                    st.rerun()
-            else:
-                st.info("Nenhuma ferramenta cadastrada no momento.")
-
-    with tab2:
-        if st.session_state.logado and st.session_state.role == "superadmin":
-            st.divider()
-            st.header('Painel de Controle')
-            st.subheader('Cadastrar novo usuário')
-
-            with st.form("novo_user"):
-                n_usuario = st.text_input("Login")
-                n_senha= st.text_input("Senha", type="password")
-                n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
-                if st.form_submit_button("Criar") and n_usuario and n_senha:
-                    if criar_usuario(n_usuario, n_senha, n_nivel):
-                        st.success("Usuário criado!")
-                        st.rerun()
+            submit = st.form_submit_button("Salvar")
+        
+            if submit and nome:
+                salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
+                st.success("Item salvo!")
+                st.rerun()
+                    else:
+                        st.info("Nenhuma ferramenta cadastrada no momento.")
+        
+            with tab2:
+                if st.session_state.logado and st.session_state.role == "superadmin":
+                    st.divider()
+                    st.header('Painel de Controle')
+                    st.subheader('Cadastrar novo usuário')
+        
+                    with st.form("novo_user"):
+                        n_usuario = st.text_input("Login")
+                        n_senha= st.text_input("Senha", type="password")
+                        n_nivel = st.selectbox("Nível", ["admin", "superadmin"])
+                        if st.form_submit_button("Criar") and n_usuario and n_senha:
+                            if criar_usuario(n_usuario, n_senha, n_nivel):
+                                st.success("Usuário criado!")
+                                st.rerun()
                     else:
                         st.error("Usuário já existe.")
        

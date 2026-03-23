@@ -195,9 +195,10 @@ with tab1:
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
         filtro = df['item'] == busca
         resultado = df[filtro]
+        item = resultado['item'].values[0]
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
-        st.success(f"A ferramenta ({resultado}) está no armário ({armario}) e na prateleira ({prateleira})")
+        st.success(f"A ferramenta ({item}) está no armário ({armario}) e na prateleira ({prateleira})")
     st.divider()
 
 # area administração

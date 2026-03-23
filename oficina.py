@@ -198,7 +198,7 @@ with tab1:
         item = resultado['item'].values[0]
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
-        st.success(f"A ferramenta ({item}) está no armário ({armario}) e na prateleira ({prateleira})")
+        st.success(f"A ferramenta st.markdown({item}) está no armário ({armario}) e na prateleira ({prateleira})")
     st.divider()
 
 # area administração

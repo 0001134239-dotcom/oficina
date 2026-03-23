@@ -29,7 +29,9 @@ def criar_tabelas():
         item TEXT PRIMARY KEY,
         armario TEXT,
         prateleira TEXT,
-        status TEXT
+        status TEXT,
+        responsavel TEXT,
+        imagem TEXT
     )
     """)
 
@@ -74,19 +76,20 @@ def carregar_ferramentas():
     conn.close()
     return df
 
-def salvar_item(item, armario, prateleira, status, responsavel):
+def salvar_item(item, armario, prateleira, status, responsavel, imagem):
     conn = get_conn()
     cursor = conn.cursor()
 
     cursor.execute("""
-    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel)
-    VALUES (%s, %s, %s, %s, %s)
+    INSERT INTO ferramentas (item, armario, prateleira, status, responsavel, imagem)
+    VALUES (%s, %s, %s, %s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
         status = EXCLUDED.status,
-        responsavel = EXCLUDED.responsavel
-    """, (item, armario, prateleira, status, responsavel))
+        responsavel = EXCLUDED.responsavel,
+        imagem = EXCLUDED.imagem
+    """, (item, armario, prateleira, status, responsavel, imagem))
 
     conn.commit()
     conn.close()
@@ -194,7 +197,6 @@ with tab1:
     st.header("Buscar Ferramenta 🔎")
     listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
     busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
-    st.write(df)
    
     if busca and not df.empty and busca != "Nenhuma ferramenta cadastrada":
         filtro = df['item'] == busca
@@ -235,9 +237,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             if status == "pegando":
                 responsavel = st.text_input('Nome de quem está pegando a ferramenta')
             if st.form_submit_button("Salvar") and nome:
-                salvar_item(nome, armario, prateleira, status, responsavel)
-                st.success("Item salvo!")
-                st.rerun()
+                salvar_item(nome, armario, prateleira, status, responsavel, nome_arquivo)
 
         st.divider()
         st.subheader("Excluir Item")
@@ -252,13 +252,16 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             st.info("Nenhuma ferramenta cadastrada no momento.")
 
     with tab3:        
-        st.subheader("Atualizar Mapa")
-        arquivo_mapa = st.file_uploader("Upload imagem (PNG/JPG)", type=['png', 'jpg', 'jpeg'])
-        if arquivo_mapa and st.button("Salvar Mapa"):
+        imagem_file = st.file_uploader("Imagem do local", type=['png', 'jpg', 'jpeg'])
+
+        nome_arquivo = ""
+        if imagem_file:
             os.makedirs("images", exist_ok=True)
-            with open(os.path.join("images", "mapa_oficina.png"), "wb") as f:
-                f.write(arquivo_mapa.getbuffer())
-            st.success("Mapa atualizado!")
+            nome_arquivo = f"{nome}.png"
+            caminho = os.path.join("images", nome_arquivo)
+
+            with open(caminho, "wb") as f:
+                f.write(imagem_file.getbuffer())
 
     with tab2:
         if st.session_state.logado and st.session_state.role == "superadmin":

@@ -81,6 +81,7 @@ def salvar_item(item, armario, prateleira):
     INSERT INTO ferramentas (item, armario, prateleira)
     VALUES (%s, %s, %s)
     ON CONFLICT (item) DO UPDATE SET
+        item = EXCLUDED.item,
         armario = EXCLUDED.armario,
         prateleira = EXCLUDED.prateleira,
     """, (item, armario, prateleira))

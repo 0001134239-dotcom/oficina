@@ -243,6 +243,16 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                             st.error("Usuário já existe.")
         
             st.divider()
+            st.subheader("Excluir Item")
+        if not df.empty:
+            item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
+           
+            if st.button("Confirmar Exclusão", type="primary"):
+                excluir_item(item_del)
+                st.success("Item excluído com sucesso!")
+                st.rerun()
+        else:
+            st.info("Nenhuma ferramenta cadastrada no momento.")
         
             st.subheader('Gerenciamento de Usuários')
         

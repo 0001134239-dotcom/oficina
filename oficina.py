@@ -237,9 +237,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             armario = st.number_input("Armário",
                                       value = 0,
                                       step = 1)
-            prateleira = st.number_input("Prateleira",
-                                        value = 0,
-                                        step = 1)
+            #prateleira = st.number_input("Prateleira",
+                                        #value = 0,
+                                        #step = 1)
             submit = st.form_submit_button("Salvar")
 
             if submit and nome:
@@ -279,7 +279,6 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         else:
             st.info("Nenhuma ferramenta cadastrada no momento.")
 
-        # ✅ AGORA FUNCIONA SEMPRE
         st.subheader('Gerenciamento de Usuários')
 
         conn = get_conn()

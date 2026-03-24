@@ -234,7 +234,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         st.subheader("Cadastrar/Atualizar Item")
         with st.form("cadastro"):
             nome = st.text_input("Nome do Item").upper()
-            armario = st.number_input("Armário")
+            armario = st.number_input("Armário",step = 1)
             prateleira = st.text_input("Prateleira")
             submit = st.form_submit_button("Salvar")
 

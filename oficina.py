@@ -261,7 +261,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                             st.rerun()
                         else:
                             st.error("Usuário já existe.")
-             st.subheader('Gerenciamento de Usuários')
+            st.subheader('Gerenciamento de Usuários')
 
             conn = get_conn()
             usuarios_df = pd.read_sql("SELECT usuario, role FROM usuarios", conn)

@@ -280,9 +280,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                     st.success("Senha alterada!")
 
                 with col2:
-                if st.button("Excluir Conta", type="primary"):
-                    excluir_usuario(target)
-                    st.rerun()
+                    if st.button("Excluir Conta", type="primary"):
+                        excluir_usuario(target)
+                        st.rerun()
                 
         st.divider()
 

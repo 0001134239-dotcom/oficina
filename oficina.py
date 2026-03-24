@@ -235,7 +235,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         with st.form("cadastro"):
             nome = st.text_input("Nome do Item").upper()
             armario = st.number_input("Armário", value = 0, step = 1)
-            prateleira = st.number_input("Prateleira", value = 0, step = 1)
+            prateleira = st.number_input("Prateleira", min_value=0, step=1)
             submit = st.form_submit_button("Salvar")
 
             if submit and nome:

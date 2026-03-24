@@ -284,7 +284,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                         excluir_usuario(target)
                         st.rerun()
                 
-        st.divider()
+            st.divider()
 
         st.subheader("Excluir Item")
         if not df.empty:

@@ -237,7 +237,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
             armario = st.number_input("Armário",
                                       value = 0,
                                       step = 1)
-            prateleira = st.text_input("Prateleira")
+            prateleira = st.number_input("Prateleira",
+                                        value = 0,
+                                        step = 1)
             submit = st.form_submit_button("Salvar")
 
             if submit and nome:

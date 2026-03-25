@@ -224,12 +224,6 @@ with tab1:
         st.markdown(f'Armario: {armario}')
         st.markdown(f'Prateleira: {prateleira}')
     user_agent = st.context.headers.get("User-Agent", "")
-
-    if "Mobile" in user_agent:
-        st.write("📱 Celular")
-    else:
-        st.write("💻 Computador")
-
     st.divider()
 
 # area administração

@@ -18,7 +18,6 @@ def fundo(imagem):
 
     /* Fundo com imagem */
     .stApp {
-        background-image: url("https://picsum.photos/1920/1080");
         background-size: cover;
         background-position: center;
     }

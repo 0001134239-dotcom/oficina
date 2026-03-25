@@ -45,7 +45,7 @@ def fundo(imagem):
     /* Destaque para todo o texto, inclusive modo light */
     body, .css-18e3th9, .css-1d391kg, .block-container, .stText, p, label, span, h1, h2, h3, h4, h5, h6 {{
         color: #222 !important;
-        font-weight: bold !important;
+        font-weight: 800 !important;
         text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
     }}
 

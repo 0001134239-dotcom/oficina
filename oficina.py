@@ -203,7 +203,7 @@ else:
         st.rerun()
 
 # interface
-tab1, tab2= st.tabs(['Localizador','Gerenciamento'])
+tab1, tab2, tab3= st.tabs(['Localizador','Gerenciamento', 'Painel de Controle'])
 
 df = carregar_ferramentas()
 
@@ -251,6 +251,18 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
         st.divider()
 
+        st.subheader("Excluir Item")
+        if not df.empty:
+            item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
+
+            if st.button("Confirmar Exclusão", type="primary"):
+                excluir_item(item_del)
+                st.success("Item excluído com sucesso!")
+                st.rerun()
+        else:
+            st.info("Nenhuma ferramenta cadastrada no momento.")
+
+    with tab3:
         if st.session_state.role == "superadmin":
             st.header('Painel de Controle')
 
@@ -291,17 +303,6 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                         st.rerun()
                 
             st.divider()
-
-        st.subheader("Excluir Item")
-        if not df.empty:
-            item_del = st.selectbox("Selecionar para excluir", df["item"], key="excluir_box")
-
-            if st.button("Confirmar Exclusão", type="primary"):
-                excluir_item(item_del)
-                st.success("Item excluído com sucesso!")
-                st.rerun()
-        else:
-            st.info("Nenhuma ferramenta cadastrada no momento.")
 
         
 

@@ -42,17 +42,9 @@ def fundo(imagem):
         text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
     }}
 
-    /* Destaque para todo o texto, inclusive modo light */
-    body, .css-18e3th9, .css-1d391kg, .block-container, .stText, p, label, span, h1, h2, h3, h4, h5, h6 {{
-        color: #222 !important;
-        font-weight: 600 !important;
-        text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
-    }}
-
     section[data-testid="stSidebar"] {{
         background: linear-gradient(180deg, #111, #222);
     }}
-
     </style>
     """, unsafe_allow_html=True)
 

@@ -48,6 +48,9 @@ def fundo(imagem):
         font-weight: 600 !important;
         text-shadow: 1px 1px 3px rgba(255, 255, 255, 0.8);
     }}
+        section[data-testid="stSidebar"] {{
+        background: linear-gradient(180deg, #111, #222);
+    }}
 
     </style>
     """, unsafe_allow_html=True)

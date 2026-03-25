@@ -307,5 +307,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
         
 
 else:
-    with tab2 and tab3:
+    with tab2:
+        st.warning('Login nao efetuado')
+    with tab3:
         st.warning('Login nao efetuado')

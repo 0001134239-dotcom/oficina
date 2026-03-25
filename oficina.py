@@ -12,11 +12,10 @@ st.set_page_config(
 def fundo(imagem):
     with open(imagem, 'rb') as img:
         img_e = base64.b64encode(img.read()).decode()
-    st.markdown("""
+    st.markdown(f"""
     <style>
     .stApp {{
         background-image: url('data:image/png;base64,{img_e}');
-        background-image: url("https://picsum.photos/1920/1080");
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

@@ -11,11 +11,11 @@ st.set_page_config(
 )
 def fundo(imagem):
     with open(imagem, 'rb') as img:
-        img_e = base64.b64encode(img.read()).decode()
+        img_g = base64.b64encode(img.read()).decode()
     st.markdown(f"""
     <style>
     .stApp {{
-        background-image: url('data:image/png;base64,{img_e}');
+        background-image: url('data:image/png;base64,{img_g}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;

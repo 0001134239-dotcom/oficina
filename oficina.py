@@ -54,7 +54,7 @@ section[data-testid="stSidebar"] {
 </style>
 """, unsafe_allow_html=True)
 
-fundo("fundo.png")
+    fundo("fundo.png")
 # conexao df1
 def get_conn():
     return psycopg2.connect(

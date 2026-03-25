@@ -14,17 +14,45 @@ def fundo(imagem):
     with open(imagem, 'rb') as img:
         img_e = base64.b64encode(img.read()).decode()
     st.markdown(
-        f'''
+        f"""
         <style>
         .stApp {{
             background-image: url('data:image/png;base64,{img_e}');
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
-            background-attachment: unset;
         }}
+
+        /* camada escura (MUITO IMPORTANTE) */
+        .stApp::before {{
+            content: "";
+            position: fixed;
+            inset: 0;
+            background: rgba(0,0,0,0.5);
+            z-index: 0;
+        }}
+
+        /* conteúdo acima da camada */
+        .block-container {{
+            position: relative;
+            z-index: 1;
+        }}
+
+        /* títulos mais fortes */
+        h1, h2, h3 {{
+            color: white;
+            font-weight: bold;
+            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+        }}
+
+        /* textos */
+        p, label {{
+            color: #f1f1f1;
+            font-size: 18px;
+        }}
+
         </style>
-        ''',
+        """,
         unsafe_allow_html=True
     )
 fundo("fundo.png")

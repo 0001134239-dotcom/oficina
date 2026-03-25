@@ -15,12 +15,13 @@ def fundo(imagem):
         img_e = base64.b64encode(img.read()).decode()
     st.markdown("""
     <style>
-
-    /* Fundo com imagem */
-    .stApp {
+    .stApp {{
+        background-image: url('data:image/png;base64,{img_e}');
         background-size: cover;
         background-position: center;
-    }
+        background-repeat: no-repeat;
+        background-attachment: unset;
+        }}
 
     /* Camada escura */
     .stApp::before {

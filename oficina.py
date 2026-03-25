@@ -13,52 +13,47 @@ st.set_page_config(
 def fundo(imagem):
     with open(imagem, 'rb') as img:
         img_e = base64.b64encode(img.read()).decode()
-st.markdown(
-    f"""
-    <style>
-    .stApp {{
-        background-image: url('data:image/png;base64,{img_e}');
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-    }}
+st.markdown("""
+<style>
 
-    /* 🔥 OVERLAY CORRETO */
-    .stApp::before {{
-        content: "";
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0,0,0,0.6);
-        z-index: -1;  /* 👈 ESSENCIAL */
-    }}
+/* Fundo com imagem */
+.stApp {
+    background-image: url("https://picsum.photos/1920/1080");
+    background-size: cover;
+    background-position: center;
+}
 
-    /* força conteúdo ficar visível */
-    .main {{
-        background-color: transparent !important;
-    }}
+/* Camada escura */
+.stApp::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.45);
+    z-index: 0;
+}
 
-    .block-container {{
-        background-color: transparent !important;
-    }}
+/* Conteúdo acima */
+.block-container {
+    position: relative;
+    z-index: 1;
+}
 
-    /* títulos */
-    h1, h2, h3 {{
-        color: white;
-        text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-    }}
+/* Título */
+h1 {
+    font-size: 42px !important;
+    font-weight: 800;
+    color: white;
+    text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+}
 
-    /* textos */
-    p, label, span {{
-        color: #f1f1f1;
-    }}
+/* Sidebar */
+section[data-testid="stSidebar"] {
+    background: linear-gradient(180deg, #111, #222);
+}
 
-    </style>
-    """,
-    unsafe_allow_html=True
-)
+</style>
+""", unsafe_allow_html=True)
+
 fundo("fundo.png")
 # conexao df1
 def get_conn():

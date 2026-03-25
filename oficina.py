@@ -11,49 +11,44 @@ st.set_page_config(
 )
 def fundo(imagem):
     with open(imagem, 'rb') as img:
-        img_g = base64.b64encode(img.read()).decode()
+        img_e = base64.b64encode(img.read()).decode()
     st.markdown(f"""
     <style>
     .stApp {{
-        background-image: url('data:image/png;base64,{img_g}');
+        background-image: url('data:image/png;base64,{img_e}');
         background-size: cover;
         background-position: center;
         background-repeat: no-repeat;
         background-attachment: unset;
-        }}
+    }}
 
-    /* Camada escura */
-    .stApp::before {
+    .stApp::before {{
         content: "";
         position: fixed;
         inset: 0;
         background: rgba(0, 0, 0, 0.45);
         z-index: 0;
-    }
+    }}
 
-    /* Conteúdo acima */
-    .block-container {
+    .block-container {{
         position: relative;
         z-index: 1;
-    }
+    }}
 
-    /* Título */
-    h1 {
+    h1 {{
         font-size: 42px !important;
         font-weight: 800;
         color: white;
         text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-    }
+    }}
 
-    /* Sidebar */
-    section[data-testid="stSidebar"] {
+    section[data-testid="stSidebar"] {{
         background: linear-gradient(180deg, #111, #222);
-    }
-
+    }}
     </style>
     """, unsafe_allow_html=True)
 
-    fundo("fundo.png")
+fundo("fundo.png")
 # conexao df1
 def get_conn():
     return psycopg2.connect(

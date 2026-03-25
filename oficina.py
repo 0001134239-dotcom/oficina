@@ -261,7 +261,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 st.rerun()
         else:
             st.info("Nenhuma ferramenta cadastrada no momento.")
-
+if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab3:
         if st.session_state.role == "superadmin":
             st.header('Painel de Controle')

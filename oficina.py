@@ -275,7 +275,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
             st.dataframe(usuarios_df, use_container_width=True)
 
-            target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
+            target = st.text_input("Usuário alvo", usuarios_df["usuario"])
             novasenha = st.text_input("Trocar senha (opcional)", type="password")
 
             col1, col2 = st.columns(2)

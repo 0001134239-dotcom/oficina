@@ -4,7 +4,7 @@ import psycopg2
 import os
 import base64
 from werkzeug.security import generate_password_hash, check_password_hash
-
+st.image('fundo.png')
 
 st.set_page_config(
     page_title="Localizador de Ferramentas",

@@ -13,48 +13,52 @@ st.set_page_config(
 def fundo(imagem):
     with open(imagem, 'rb') as img:
         img_e = base64.b64encode(img.read()).decode()
-    st.markdown(
-        f"""
-        <style>
-        .stApp {{
-            background-image: url('data:image/png;base64,{img_e}');
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
-        }}
+st.markdown(
+    f"""
+    <style>
+    .stApp {{
+        background-image: url('data:image/png;base64,{img_e}');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+    }}
 
-        /* camada escura (MUITO IMPORTANTE) */
-        .stApp::before {{
-            content: "";
-            position: fixed;
-            inset: 0;
-            background: rgba(0,0,0,0.5);
-            z-index: 0;
-        }}
+    /* 🔥 OVERLAY CORRETO */
+    .stApp::before {{
+        content: "";
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0,0,0,0.6);
+        z-index: -1;  /* 👈 ESSENCIAL */
+    }}
 
-        /* conteúdo acima da camada */
-        .block-container {{
-            position: relative;
-            z-index: 1;
-        }}
+    /* força conteúdo ficar visível */
+    .main {{
+        background-color: transparent !important;
+    }}
 
-        /* títulos mais fortes */
-        h1, h2, h3 {{
-            color: white;
-            font-weight: bold;
-            text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
-        }}
+    .block-container {{
+        background-color: transparent !important;
+    }}
 
-        /* textos */
-        p, label {{
-            color: #f1f1f1;
-            font-size: 18px;
-        }}
+    /* títulos */
+    h1, h2, h3 {{
+        color: white;
+        text-shadow: 2px 2px 10px rgba(0,0,0,0.7);
+    }}
 
-        </style>
-        """,
-        unsafe_allow_html=True
-    )
+    /* textos */
+    p, label, span {{
+        color: #f1f1f1;
+    }}
+
+    </style>
+    """,
+    unsafe_allow_html=True
+)
 fundo("fundo.png")
 # conexao df1
 def get_conn():

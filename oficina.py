@@ -315,7 +315,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
                 with col2:
                     if st.button("Excluir Conta", type="primary"):
-                        if role == 'superadmin':
+                        if role = 'superadmin':
                             st.warning('Voce nao pode excluir este usuario!')
                         else:
                             excluir_usuario(target)

@@ -304,7 +304,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
             target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
             novasenha = st.text_input("Trocar senha (opcional)", type="password")
-            role = usuarios_df.loc[usuarios_df["usuario"] == target, "role"].values[0]
+            role_series = usuarios_df.loc[usuarios_df["usuario"] == target, "role"]
             if not role_series.empty:
                 role = role_series.values[0]
             else:

@@ -304,6 +304,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
             target = st.selectbox("Usuário alvo", usuarios_df["usuario"])
             novasenha = st.text_input("Trocar senha (opcional)", type="password")
+            role = usuarios_df['role']
 
             col1, col2 = st.columns(2)
 
@@ -314,7 +315,7 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
 
                 with col2:
                     if st.button("Excluir Conta", type="primary"):
-                        if target['role'] != 'superadmin:
+                        if role != 'superadmin:
                             excluir_usuario(target)
                         else:
                             st.warning('Voce nao pode excluir este usuario!')

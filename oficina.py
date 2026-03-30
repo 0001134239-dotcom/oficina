@@ -231,7 +231,7 @@ df = carregar_ferramentas()
 # Area geral
 with tab1:
     st.title("Localizador de Itens da Oficina")
-    st.header("Buscar Ferramenta 🔎")
+    st.header("Buscar Ferramentas 🔎")
     listaferramentas = df["item"].tolist() if not df.empty else ["Nenhuma ferramenta cadastrada"]
     busca = st.selectbox("Selecione a ferramenta que você deseja", listaferramentas)
 
@@ -242,7 +242,7 @@ with tab1:
         armario = resultado['armario'].values[0]
         prateleira = resultado['prateleira'].values[0]
         st.markdown(f'Item: {item}')
-        st.markdown(f'Armario: {armario}')
+        st.markdown(f'Armário: {armario}')
         st.markdown(f'Prateleira: {prateleira}')
     user_agent = st.context.headers.get("User-Agent", "")
     st.divider()

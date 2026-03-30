@@ -276,6 +276,9 @@ if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
                 st.rerun()
         else:
             st.info("Nenhuma ferramenta cadastrada no momento.")
+else:
+    st.warning("Login não efetuado.")
+
 if st.session_state.logado and st.session_state.role in ["admin", "superadmin"]:
     with tab3:
         if st.session_state.role == "superadmin":
